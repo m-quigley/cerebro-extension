@@ -54,13 +54,13 @@ body {
     linear-gradient(90deg, var(--cyber-grid) 1px, transparent 1px);
   background-size: 22px 22px;
   color: var(--fg);
-  font:
-    13px/1.45 "Geist",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    system-ui,
-    sans-serif;
+  /* Explicit longhand — the `font:` shorthand was silently failing
+   * to propagate the family down to .status-text (the one element
+   * that relies on inheritance). Longhand never has that problem. */
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 /* Header — wordmark + subtitle. Wordmark gets the cyan glow the
@@ -192,6 +192,12 @@ h1 {
 }
 
 .status-text {
+  /* Explicit so it never falls through to system, regardless of
+   * whether body's family inherited correctly. This is the line
+   * that was reading as San Francisco / Helvetica in v0.2.2 +
+   * v0.2.3 — everything with an explicit family worked fine. */
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
   font-size: 12.5px;
   line-height: 1.5;
   color: var(--fg);
