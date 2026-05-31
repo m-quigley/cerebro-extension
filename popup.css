@@ -3,6 +3,30 @@
  * uppercase mono labels, corner-bracket accents on every panel,
  * subtle dotted grid background. */
 
+/* Geist + Geist Mono shipped locally (Vercel's open-source font,
+ * SIL OFL 1.1). Variable axis so all weights work from one file
+ * each; total ~115 KB. The website pulls Geist via next/font, but
+ * a chrome extension popup has no such pipeline, so we bundle it
+ * — otherwise the popup falls through to -apple-system / Menlo. */
+@font-face {
+  font-family: "Geist";
+  src:
+    url("fonts/Geist-Variable.woff2") format("woff2-variations"),
+    url("fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src:
+    url("fonts/GeistMono-Variable.woff2") format("woff2-variations"),
+    url("fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
   --cyber-cyan: oklch(0.82 0.16 195);

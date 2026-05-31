@@ -36,6 +36,7 @@ subscribed" next time you open it.
 | `background.js` | Service worker: cookie → JWT, subscribe / unsubscribe, `push` + `notificationclick` handlers. |
 | `popup.html` / `popup.css` / `popup.js` | Toolbar popup UI — status + Subscribe / Unsubscribe button. |
 | `icons/` | 16 / 48 / 128 px PNG icons. |
+| `fonts/` | Geist + Geist Mono variable WOFF2 (SIL OFL 1.1 — Vercel). |
 
 ## What's on the cerebro side
 
