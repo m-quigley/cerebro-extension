@@ -60,6 +60,7 @@ No external hosts; no analytics; no remote code.
 
 ## Roadmap
 
-- [ ] Replace the placeholder purple-C icons with real artwork.
+- [x] Cyber-panel styling on the popup; icons in the cerebro brand cyan (v0.2.0).
+- [ ] Chrome Web Store listing so install is one click instead of unpacked.
 - [ ] Settings UI on `cerebro/settings/destinations` to list registered devices and rename / revoke individual ones.
 - [ ] Options page for click-behaviour (open tab vs focus existing) and per-tile filter.

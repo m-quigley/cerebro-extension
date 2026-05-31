@@ -1,105 +1,256 @@
+/* Cerebro extension popup — mirrors the website's cyber-panel
+ * aesthetic: dark navy ground, cyan accents (oklch(0.82 0.16 195)),
+ * uppercase mono labels, corner-bracket accents on every panel,
+ * subtle dotted grid background. */
+
 :root {
   color-scheme: dark;
+  --cyber-cyan: oklch(0.82 0.16 195);
+  --cyber-cyan-08: oklch(0.62 0.12 195 / 8%);
+  --cyber-cyan-16: oklch(0.62 0.12 195 / 16%);
+  --cyber-cyan-30: oklch(0.62 0.12 195 / 30%);
+  --cyber-cyan-50: oklch(0.82 0.16 195 / 50%);
+  --cyber-grid: oklch(0.62 0.12 195 / 6%);
+  --cyber-magenta: oklch(0.7 0.25 330);
+
+  --bg: oklch(0.16 0.018 230);
+  --panel: oklch(0.18 0.02 230 / 70%);
+  --fg: oklch(0.95 0.005 220);
+  --muted-fg: oklch(0.62 0.012 220);
+  --border: oklch(0.62 0.12 195 / 28%);
 }
+
 * {
   box-sizing: border-box;
 }
+
 body {
-  width: 280px;
+  width: 300px;
   margin: 0;
   padding: 14px;
-  background: #0f0f23;
-  color: #e6e6f0;
+  background: var(--bg);
+  /* Cyber dotted grid — exact same construction as the website. */
+  background-image:
+    linear-gradient(var(--cyber-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cyber-grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--fg);
   font:
-    13px/1.45 -apple-system,
+    13px/1.45 "Geist",
+    -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     system-ui,
     sans-serif;
 }
+
+/* Header — wordmark + subtitle. Wordmark gets the cyan glow the
+ * website uses on its primary headings. */
 header {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 h1 {
   margin: 0;
-  font-size: 14px;
-  letter-spacing: 0.04em;
+  font-family:
+    "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #c4b5fd;
+  color: var(--cyber-cyan);
+  text-shadow:
+    0 0 1px oklch(0.82 0.16 195 / 50%),
+    0 0 14px oklch(0.82 0.16 195 / 22%);
 }
 .subtitle {
-  font-size: 11px;
-  color: #6f6f8c;
-  letter-spacing: 0.02em;
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted-fg);
 }
-.status {
-  padding: 11px 12px;
-  background: #1a1a2e;
-  border: 1px solid #2a2a4a;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  min-height: 38px;
+
+/* Cyber-panel — direct echo of components/cyber/Panel.tsx + its
+ * .cyber-panel CSS in app/globals.css. Inset cyan border + glow on
+ * hover; corner brackets at TL and BR. */
+.panel {
+  position: relative;
+  background: var(--panel);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--cyber-cyan-08),
+    0 0 0 1px var(--cyber-cyan-08);
+  transition:
+    box-shadow 0.22s,
+    transform 0.22s;
+}
+.panel:hover {
+  box-shadow:
+    inset 0 0 0 1px var(--cyber-cyan-16),
+    0 0 18px -10px var(--cyber-cyan-50);
+}
+
+/* Corner brackets — top-left and bottom-right L-shapes. The website
+ * uses ::before + ::after on .cyber-corner; we inline them on the
+ * panel itself for one less wrapper element. */
+.panel::before,
+.panel::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--cyber-cyan);
+}
+.panel::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.panel::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+.panel:hover::before,
+.panel:hover::after {
+  filter: drop-shadow(0 0 4px var(--cyber-cyan));
+}
+
+.panel > header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 7px 11px;
+  margin: 0;
+}
+.panel-label {
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-fg);
+}
+.panel-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyber-cyan);
+}
+.panel-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyber-cyan);
+  box-shadow: 0 0 6px var(--cyber-cyan);
+}
+.panel-status.off::before {
+  background: var(--muted-fg);
+  box-shadow: none;
+}
+.panel-status.off {
+  color: var(--muted-fg);
+}
+.panel-status.err::before {
+  background: var(--cyber-magenta);
+  box-shadow: 0 0 6px var(--cyber-magenta);
+}
+.panel-status.err {
+  color: var(--cyber-magenta);
+}
+
+.panel-body {
+  padding: 11px 12px;
+}
+
+.status-text {
   font-size: 12.5px;
-  color: #d6d6e6;
+  line-height: 1.5;
+  color: var(--fg);
 }
-.status.error {
-  border-color: #9a3a4a;
-  color: #ffb4b4;
+.status-text.error {
+  color: var(--cyber-magenta);
 }
+
+#actions {
+  margin-top: 4px;
+}
+
+/* Buttons — cyber primary (cyan on dark) + cyber secondary (bordered).
+ * Uppercase mono lockup so they read as cyber-label-with-action. */
 button {
   width: 100%;
-  padding: 9px 12px;
+  padding: 10px 12px;
   margin-bottom: 8px;
   border: 0;
-  border-radius: 6px;
-  font: inherit;
-  font-weight: 500;
+  border-radius: 4px;
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
-  letter-spacing: 0.01em;
+  transition:
+    background-color 0.16s,
+    box-shadow 0.16s,
+    color 0.16s;
 }
 button:disabled {
   opacity: 0.55;
   cursor: progress;
 }
 button.primary {
-  background: #7c3aed;
-  color: white;
+  background: var(--cyber-cyan);
+  color: oklch(0.14 0.02 230);
+  box-shadow: 0 0 0 1px var(--cyber-cyan-30);
 }
 button.primary:hover:not(:disabled) {
-  background: #8b4ff0;
+  background: oklch(0.88 0.16 195);
+  box-shadow:
+    0 0 0 1px var(--cyber-cyan),
+    0 0 18px -4px var(--cyber-cyan-50);
 }
 button.secondary {
   background: transparent;
-  color: #a8a8c0;
-  border: 1px solid #2a2a4a;
+  color: var(--muted-fg);
+  border: 1px solid var(--border);
 }
 button.secondary:hover:not(:disabled) {
-  background: #1a1a2e;
-  color: #e6e6f0;
+  background: oklch(0.2 0.02 230);
+  color: var(--fg);
+  border-color: var(--cyber-cyan-30);
 }
+
 footer {
   margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #1f1f38;
+  padding-top: 10px;
+  border-top: 1px solid oklch(0.62 0.12 195 / 10%);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace, monospace;
 }
 footer a {
-  color: #a78bfa;
+  color: var(--cyber-cyan);
   text-decoration: none;
-  font-size: 11px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
 }
 footer a:hover {
   text-decoration: underline;
 }
 footer .version {
-  font-size: 10.5px;
-  color: #555575;
+  font-size: 10px;
+  color: oklch(0.5 0.01 220);
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }

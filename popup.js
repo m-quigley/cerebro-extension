@@ -12,8 +12,24 @@ function send(action) {
 
 function setStatus(text, kind) {
   const el = $("status");
+  const badge = $("statusBadge");
   el.textContent = text;
   el.classList.toggle("error", kind === "error");
+
+  /* Three badge states — `live` (cyan glow), `off` (muted), `err`
+   * (magenta). Mirrors the website's per-panel status dot. */
+  badge.classList.remove("off", "err");
+  if (kind === "error") {
+    badge.classList.add("err");
+    badge.textContent = "Error";
+  } else if (kind === "live") {
+    badge.textContent = "Live";
+  } else if (kind === "ready") {
+    badge.textContent = "Ready";
+  } else {
+    badge.classList.add("off");
+    badge.textContent = kind === "loading" ? "…" : "Idle";
+  }
 }
 
 async function refresh() {
@@ -28,9 +44,9 @@ async function refresh() {
   if (!r.signedIn) {
     setStatus("Sign in to Cerebro to enable push notifications.");
   } else if (r.subscribed) {
-    setStatus("Receiving push notifications. ✓");
+    setStatus("Receiving push notifications.", "live");
   } else {
-    setStatus("Signed in — click Subscribe to start receiving pushes.");
+    setStatus("Signed in — click Subscribe to start receiving pushes.", "ready");
   }
 }
 
@@ -57,7 +73,7 @@ $("signin").addEventListener("click", () => {
 
 $("subscribe").addEventListener("click", async () => {
   busy("subscribe", "Subscribing…");
-  setStatus("Subscribing…");
+  setStatus("Subscribing…", "loading");
   const r = await send("subscribe");
   unbusy("subscribe");
   if (!r?.ok) {
@@ -69,10 +85,11 @@ $("subscribe").addEventListener("click", async () => {
 
 $("unsubscribe").addEventListener("click", async () => {
   busy("unsubscribe", "Unsubscribing…");
-  setStatus("Unsubscribing…");
+  setStatus("Unsubscribing…", "loading");
   await send("unsubscribe");
   unbusy("unsubscribe");
   refresh();
 });
 
+setStatus("Loading…", "loading");
 refresh();
