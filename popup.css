@@ -192,14 +192,15 @@ h1 {
 }
 
 .status-text {
-  /* Explicit so it never falls through to system, regardless of
-   * whether body's family inherited correctly. This is the line
-   * that was reading as San Francisco / Helvetica in v0.2.2 +
-   * v0.2.3 — everything with an explicit family worked fine. */
-  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    system-ui, sans-serif;
-  font-size: 12.5px;
+  /* Use Geist Mono — the popup is a cyber control surface, not
+   * prose, so it should match the cyber-label aesthetic everything
+   * else in the popup uses. Geist Sans (which Geist body inherits)
+   * looks too close to system SF Pro at this size. */
+  font-family: "Geist Mono", "JetBrains Mono", Menlo, ui-monospace,
+    monospace;
+  font-size: 12px;
   line-height: 1.5;
+  letter-spacing: 0.01em;
   color: var(--fg);
 }
 .status-text.error {
