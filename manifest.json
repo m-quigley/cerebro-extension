@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Cerebro",
   "description": "Push notifications from cerebro.zeroknowledge.fr — fires even when the tab is closed.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "permissions": ["notifications", "storage", "cookies"],
   "host_permissions": ["https://www.zeroknowledge.fr/*"],
   "background": {
