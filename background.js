@@ -156,13 +156,21 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
  *   { title, body, url?, id? }
  * — minimal stable shape. We render via the standard
  * showNotification + carry url/id on the notification data so
- * notificationclick can route. */
+ * notificationclick can route.
+ *
+ * Verbose console logging on every code path until the end-to-end
+ * delivery is verified — every line is prefixed `[push]` so it's
+ * easy to filter and easy to strip once stable. */
 self.addEventListener("push", (event) => {
+  console.log("[push] event received", event);
   let data = {};
   try {
+    const rawText = event.data?.text();
+    console.log("[push] raw data text:", rawText);
     data = event.data?.json() ?? {};
-  } catch {
-    /* Non-JSON payload — fall back to text. */
+    console.log("[push] parsed data:", data);
+  } catch (e) {
+    console.warn("[push] data parse failed, falling back to text:", e);
     data = { title: "Cerebro", body: event.data?.text() ?? "" };
   }
   const title = data.title || "Cerebro";
@@ -178,7 +186,13 @@ self.addEventListener("push", (event) => {
     tag: data.id || undefined,
     renotify: !!data.id,
   };
-  event.waitUntil(self.registration.showNotification(title, options));
+  console.log("[push] calling showNotification", { title, options });
+  event.waitUntil(
+    self.registration
+      .showNotification(title, options)
+      .then(() => console.log("[push] showNotification resolved"))
+      .catch((e) => console.error("[push] showNotification rejected:", e)),
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {
